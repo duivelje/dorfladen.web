@@ -1,1 +1,13 @@
 services:
+  db:
+    container_name: db-container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: dorfladen-db
+      POSTGRES_USER: Admin
+      POSTGRES_PASSWORD: ThisIsATest
+    volumes:
+      -  ./dorflData:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
