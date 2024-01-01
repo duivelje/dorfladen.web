@@ -1,11 +1,16 @@
-package com.steffi.dorfladen.web
+package com.steffi.dorfladen.web;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class Main {
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+
+@SpringBootApplication
+public class TestConnect {
+    
     public static void main(String[] args) {
         String url = "jdbc:postgresql://localhost:5432/dorfladen-db";
         String user = "Admin";
@@ -25,7 +30,8 @@ public class Main {
             stmt.close();
             conn.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("fehler");
         }
+        
     }
 }
