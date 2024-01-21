@@ -1,0 +1,10 @@
+package com.steffi.dorfladen.web.controller;
+
+public class LogEintraegeController {
+
+    public void createLogEintragForAnmeldeversuch(LoginCredentials cred) {
+        var newLog = new LogEintraege();
+        newLog.setSou
+
+    }
+}

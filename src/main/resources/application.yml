@@ -1,6 +1,0 @@
-spring:
-  data:
-    postgresdb:
-      database: dorfladen-db
-      host: db-container
-      port: 5432

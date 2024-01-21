@@ -1,18 +1,24 @@
-package com.steffi.dorfladen.web.Beans;
+package com.steffi.dorfladen.web.beans;
 
-import com.steffi.dorfladen.web.Datenbank.PasswordHashing;
+import com.steffi.dorfladen.web.util.PasswortHashing;
 
+import jakarta.persistence.*;
+
+
+@Entity
+@Table(name = "benutzer")
 public class Benutzer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     // Private Felder
     private String benutzername;
+
+    @Column(name = "passwort_hash")
     private String passwortHashed;
 
-    // Öffentlicher Konstruktor ohne Parameter
-    public Benutzer() {
-    }
-
-    // Getter- und Setter-Methoden
 
     public String getBenutzername() {
         return benutzername;
@@ -27,7 +33,7 @@ public class Benutzer {
     }
 
     public void setPasswortHashed(String rawPasswort) {
-        this.passwortHashed = PasswordHashing.encrypt(rawPasswort);
+        this.passwortHashed = PasswortHashing.encrypt(rawPasswort);
     }
 
     // Optional: Überschreiben von toString() zur besseren Ausgabe
