@@ -11,8 +11,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+import org.springframework.stereotype.Component;
+
 import com.steffi.dorfladen.web.util.Util;
 
+@Component
 public class DBMonitoringFrame extends JInternalFrame {
 
     private JButton testDBConnectionButton;
@@ -20,11 +23,17 @@ public class DBMonitoringFrame extends JInternalFrame {
     private JLabel counterDataLabel;
     private JLabel connectionDataLabel;
     private JPanel contentPanel;
+    private final DBMonitoringController controller;
 
-    public DBMonitoringFrame() {
+    public DBMonitoringFrame(DBMonitoringController controller) {
         super();
+        this.controller = controller;
         init();
         show();
+    }
+
+    protected void startDBMonitoring() {
+        controller.startDBMonitoring(this);
     }
 
     @Override
@@ -75,7 +84,7 @@ public class DBMonitoringFrame extends JInternalFrame {
 
         add(contentPanel);
 
-        //Auswahl-Kasten-Panel erstmal ausblenden, sieht iwie kacke aus
+        // Auswahl-Kasten-Panel erstmal ausblenden, sieht iwie kacke aus
         ((javax.swing.plaf.basic.BasicInternalFrameUI) getUI()).setNorthPane(null);
 
     }
@@ -84,7 +93,7 @@ public class DBMonitoringFrame extends JInternalFrame {
         if (testDBConnectionButton == null) {
             testDBConnectionButton = new JButton("DB-Connection JETZT testen");
             testDBConnectionButton.addActionListener(a -> {
-                DBMonitoringController.getInstance().resetDBCheckTime();
+                controller.resetDBCheckTime();
             });
         }
         return testDBConnectionButton;

@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LogEintraegeRepository extends CrudRepository<LogEintraege, Long> {
+public interface LogEintragRepository extends CrudRepository<LogEintrag, Long> {
 
     
 }

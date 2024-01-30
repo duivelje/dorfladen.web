@@ -1,6 +1,7 @@
 package com.steffi.dorfladen.web.beans;
 
-import com.steffi.dorfladen.web.util.PasswortHashing;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import jakarta.persistence.*;
 
@@ -14,9 +15,11 @@ public class Benutzer {
     private Long id;
 
     // Private Felder
+    @Column(unique = true)
     private String benutzername;
 
     @Column(name = "passwort_hash")
+    @JsonIgnore
     private String passwortHashed;
 
 
@@ -32,8 +35,8 @@ public class Benutzer {
         return passwortHashed;
     }
 
-    public void setPasswortHashed(String rawPasswort) {
-        this.passwortHashed = PasswortHashing.encrypt(rawPasswort);
+    public void setPasswortHashdded(String hashedPasswort) {
+        this.passwortHashed = hashedPasswort;
     }
 
     // Optional: Überschreiben von toString() zur besseren Ausgabe

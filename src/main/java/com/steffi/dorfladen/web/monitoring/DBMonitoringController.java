@@ -4,34 +4,27 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class DBMonitoringController {
     
-    private DatabaseCheckTask dbcTask;
-    private static DBMonitoringController instance;
+    private final DatabaseCheckTask dbcTask;
 
-    public static DBMonitoringController getInstance(){
-        if(instance == null){
-            instance = new DBMonitoringController();
-        }
-        return instance;
+    public DBMonitoringController(DatabaseCheckTask task){
+        this.dbcTask = task;
     }
 
     public void startDBMonitoring(DBMonitoringFrame dbMonFrame){
         //
+        dbcTask.setDBMonitopringFrame(dbMonFrame);
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         // Setzt einen Task, der alle 10 Minuten ausgeführt wird
-        executor.scheduleAtFixedRate(getDatabaseCheckTask(dbMonFrame), 0, 1, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(dbcTask, 0, 1, TimeUnit.SECONDS);
 
-    }
-
-    private DatabaseCheckTask getDatabaseCheckTask(DBMonitoringFrame dbMonFrame){
-        if(dbcTask == null){
-            dbcTask = new DatabaseCheckTask(dbMonFrame);
-        }
-        return dbcTask;
     }
 
     public void resetDBCheckTime(){
-        getDatabaseCheckTask(null).checkNow();
+        dbcTask.checkNow();
     }
 }

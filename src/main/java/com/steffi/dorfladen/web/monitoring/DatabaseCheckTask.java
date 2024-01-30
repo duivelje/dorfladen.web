@@ -1,23 +1,47 @@
 package com.steffi.dorfladen.web.monitoring;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.steffi.dorfladen.web.util.ConnectionUtil;
+import javax.sql.DataSource;
+
+import org.springframework.stereotype.Component;
+
 import com.steffi.dorfladen.web.util.Util;
 
-class DatabaseCheckTask implements Runnable {
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
+@Component
+public class DatabaseCheckTask implements Runnable {
+
+    private static final int CHECK_INTERVAL_SECONDS = 600;
+    private static int secondsUntilNextCheck = 0;
 
     private DBMonitoringFrame dbMonFrame;
-    private static final int CHECK_INTERVAL_SECONDS = 600;
-    private static int secondsUntilNextCheck = CHECK_INTERVAL_SECONDS;
 
-    public DatabaseCheckTask(DBMonitoringFrame dbMonFrame) {
-        this.dbMonFrame = dbMonFrame;
-        checkDatabaseConnection();
-    }
+    // private DataSource dataSource;
 
-    private DatabaseCheckTask() {
-        // Darf nicht ohne Frame aufgerufen werden, wäre sonst witzlos
+    // public DatabaseCheckTask(DataSource dataSource) {
+    // this.dataSource = dataSource;
+    // // checkDatabaseConnection();
+    // }
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    // public Connection getConnection() {
+    // try (var con = dataSource.getConnection()) {
+    // return con;
+    // // Verwenden Sie das Connection-Objekt
+    // } catch (SQLException e) {
+    // // Fehlerbehandlung
+    // }
+    // return null;
+    // }
+
+    public void setDBMonitopringFrame(DBMonitoringFrame dbFrame) {
+        dbMonFrame = dbFrame;
     }
 
     @Override
@@ -25,7 +49,7 @@ class DatabaseCheckTask implements Runnable {
         secondsUntilNextCheck--;
 
         // Anzeige der verbleibenden Zeit bis zur nächsten Überprüfung
-        dbMonFrame.getCounterDataLabel().setText(secondsUntilNextCheck/60 + ":" + secondsUntilNextCheck%60);
+        dbMonFrame.getCounterDataLabel().setText(secondsUntilNextCheck / 60 + ":" + secondsUntilNextCheck % 60);
 
         if (secondsUntilNextCheck <= 0) {
             // Zurücksetzen des Timers für die nächste Überprüfung
@@ -39,10 +63,12 @@ class DatabaseCheckTask implements Runnable {
     private void checkDatabaseConnection() {
         var isConnected = false;
         try {
-            if (ConnectionUtil.getConnection() != null && ConnectionUtil.getConnection().isValid(2)) {
-                isConnected = true;
-            }
-        } catch (SQLException e) {
+            var benutzer = entityManager.createNativeQuery("SELECT benutzername FROM dorfladen.benutzer")
+                    .getResultList();
+            System.out.println(benutzer.iterator().next().toString());
+            isConnected = true;
+        } catch (Exception e) {
+            System.out.println("Abfrage nicht erfolgreich");
             // HIER nichts machen, dann is eben nicht connected
         }
         // GUI aktualisieren
@@ -58,7 +84,7 @@ class DatabaseCheckTask implements Runnable {
         System.out.println("check");
     }
 
-    public void checkNow(){
+    public void checkNow() {
         secondsUntilNextCheck = 0;
     }
 }

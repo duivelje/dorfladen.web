@@ -4,6 +4,11 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
+import org.springframework.stereotype.Component;
+
+import jakarta.annotation.PostConstruct;
+
 import javax.swing.UnsupportedLookAndFeelException;
 
 //JFreeChart
@@ -17,24 +22,21 @@ import javax.swing.UnsupportedLookAndFeelException;
  * Außerdem soll es eine Möglichkeit geben, Benutzer zu pflegen <- hier wäre es professionell, wenn man sein Passwort mit der ersten ANmeldung ändern muss ACHTUNG! Sicherheit!
  * 
  */
+@Component
 public class MonitoringFrame extends JFrame {
 
     private JDesktopPane contentPanel;
-    private static MonitoringFrame instance;
 
     private DBMonitoringFrame dbMonitoringFrame;
 
-    private MonitoringFrame() {
-        // Frame initialisieren
+    public MonitoringFrame(DBMonitoringFrame dbMonitoringFrame) {
+        this.dbMonitoringFrame = dbMonitoringFrame;
         setNimbusLookAndFeel();
-        initialize();
     }
 
-    public static MonitoringFrame getInstance() {
-        if (instance == null) {
-            instance = new MonitoringFrame();
-        }
-        return instance;
+    @PostConstruct
+    private void init() {
+        initialize();
     }
 
     private void initialize() {
@@ -52,19 +54,14 @@ public class MonitoringFrame extends JFrame {
             contentPanel.setDoubleBuffered(true);
             var content = getDBMonitoringFrame();
             contentPanel.add(content, java.awt.BorderLayout.CENTER);
-            // panelStack.add(content);
+            content.startDBMonitoring();
         }
         return contentPanel;
     }
 
     public DBMonitoringFrame getDBMonitoringFrame() {
-        if (dbMonitoringFrame == null) {
-            dbMonitoringFrame = new DBMonitoringFrame();
-        }
         return dbMonitoringFrame;
     }
-
-    
 
     private static void setNimbusLookAndFeel() {
         for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
