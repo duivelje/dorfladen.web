@@ -1,6 +1,10 @@
-package com.steffi.dorfladen.web.beans;
+package com.steffi.dorfladen.web.util;
 
 import org.springframework.stereotype.Service;
+
+import com.steffi.dorfladen.web.beans.LogEintrag;
+import com.steffi.dorfladen.web.beans.LogEintragRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.sql.Timestamp;
